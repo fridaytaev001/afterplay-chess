@@ -15,6 +15,8 @@ AI_MODEL=anthropic/claude-sonnet-4.5
 
 `AI_MODEL` is optional. Keep API keys in Vercel or a local `.env.local`, never in browser code or a commit. Deploy again after changing environment variables. The key needs usable AI Gateway credits.
 
+Vercel deployments can also authenticate using a deployment-provided `VERCEL_OIDC_TOKEN` environment variable. An explicit Gateway API key takes precedence. Request headers and request-context tokens are never used as credentials. The status endpoint reports the authentication method but never the credential. If neither environment credential is available, configure the Gateway API key and redeploy.
+
 ## Multi-modal track routing
 
 Two models run through AI Gateway: `anthropic/claude-sonnet-4.5` for the text-based counter-plan, and `google/gemini-2.5-flash-lite` for fast, lower-cost moves from a board PNG and text game context. `AI_STRATEGY_MODEL`/`AI_MODEL` and `AI_MOVE_MODEL` optionally override these defaults; keep them distinct and vision-capable.
