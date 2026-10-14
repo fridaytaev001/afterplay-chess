@@ -15,6 +15,16 @@ AI_MODEL=anthropic/claude-sonnet-4.5
 
 `AI_MODEL` is optional. Keep API keys in Vercel or a local `.env.local`, never in browser code or a commit. Deploy again after changing environment variables. The key needs usable AI Gateway credits.
 
+## Multi-modal track routing
+
+Two models run through AI Gateway: `anthropic/claude-sonnet-4.5` for the text-based counter-plan, and `google/gemini-2.5-flash-lite` for fast, lower-cost moves from a board PNG and text game context. `AI_STRATEGY_MODEL`/`AI_MODEL` and `AI_MOVE_MODEL` optionally override these defaults; keep them distinct and vision-capable.
+
+The player can choose Fast & economical or Deliberate move routing. Fast requests prefer Gemini with an 8-second timeout; deliberate analysis prefers Sonnet with a 14-second timeout. Moves have a 500-output-token cap; analysis has a 1,200-token cap. These choices bound latency and output spend; actual response time and token use are shown for each successful call.
+
+HTTP failures, timeouts, malformed JSON, and invalid shortlisted moves automatically try the alternate model. Results show the preferred and used model, each attempt, elapsed time, and usage. If both models fail, the position is retained and the player can retry or explicitly select engine practice. The Simulate primary outage checkbox skips the preferred request and sends a real request to the fallback model; the UI labels the outage as simulated.
+
+For judging, use the synthetic sample, build memory (Sonnet), select AI with memory, play a move (Gemini), then check Simulate primary outage and play another move to demonstrate the fallback. Synthetic game history is labeled; model calls use the real configured Gateway key.
+
 For a new copy, Vercel supports cloning a repository subdirectory:
 
 [Deploy the chess demo](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffridaytaev001%2Fafterplay-chess&project-name=afterplay-chess&repository-name=afterplay-chess-demo&env=AI_GATEWAY_API_KEY&envDescription=Vercel%20AI%20Gateway%20key%20for%20the%20adaptive%20opponent)
